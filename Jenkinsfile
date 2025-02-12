@@ -39,8 +39,6 @@ pipeline {
                     bat "npx netlify deploy --site ${netlifySiteID} --auth ${netlifyAccessToken} --dir ./build --prod"
                 }
             }
-        }
-     
-    
+        }
     }
 }
