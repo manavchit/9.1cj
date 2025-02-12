@@ -5,20 +5,20 @@ pipeline {
     }
     
     stages {
-        stage("Install") {
+        stage("Installation") {
             steps {
                 git url : "https://github.com/manavchit/9.1cj.git", branch : "main"
                 bat "npm install --verbose -omit=optional"
             }
         }
-        stage("Build"){
+        stage("npm run Build"){
             steps{
                 
                 bat "npm run build"
             }
         }
         
-        stage("Test"){
+        stage("Testing"){
             steps{
                 bat "npm test -- --passWithNoTests"
             }
