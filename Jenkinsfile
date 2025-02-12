@@ -29,10 +29,6 @@ pipeline {
                 bat "npx eslint src"
             }
         }
-        stage("Deploy"){
-            steps{
-                bat "npx eslint src"
-            }
-        }
+       
     }
 }
