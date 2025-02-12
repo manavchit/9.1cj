@@ -1,34 +1,35 @@
+
 pipeline {
     agent any
-    tools{
+    
+    tools {
         nodejs 'nodejs'
     }
     
     stages {
-        stage("Installation") {
+        stage("Setup Dependencies") {
             steps {
-                git url : "https://github.com/manavchit/9.1cj.git", branch : "main"
-                bat "npm install --verbose -omit=optional"
+                git branch: "main", url: "https://github.com/manavchit/9.1cj.git"
+                bat "npm install --verbose --omit=optional"
             }
         }
-        stage("npm run Build"){
-            steps{
-                
+        
+        stage("Build Project") {
+            steps {
                 bat "npm run build"
             }
         }
         
-        stage("Testing"){
-            steps{
+        stage("Run Tests") {
+            steps {
                 bat "npm test -- --passWithNoTests"
             }
         }
         
-        stage("Code Analysis"){
-            steps{
+        stage("Static Code Analysis") {
+            steps {
                 bat "npx eslint src"
             }
         }
-       
     }
 }
