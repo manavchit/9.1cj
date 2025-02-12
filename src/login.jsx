@@ -1,7 +1,6 @@
 import Input from "./Input";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import { signinAuthUserWithEmailAndPassword } from "./firebase";
 import "./login.css";
 
 function Login() {
@@ -13,7 +12,7 @@ function Login() {
   const { email, password } = contact;
   const navigate = useNavigate(); // Initialize useNavigate
 
-  async function handleClick(event) {
+  function handleClick(event) {
     event.preventDefault();
 
     if (!email || !password) {
@@ -21,19 +20,8 @@ function Login() {
       return;
     }
 
-    try {
-      const response = await signinAuthUserWithEmailAndPassword(email, password);
-      
-      if (response) {
-        navigate('/welcome'); // Redirect to Welcome page on successful login
-      }
-    } catch (error) {
-      if (error.message.includes("wrong-password") || error.message.includes("user-not-found")) {
-        alert("Invalid email or password. Please try again.");
-      } else {
-        alert("Error occurred during login: " + error.message);
-      }
-    }
+    // Simulate successful login (Replace with actual authentication logic if needed)
+    navigate('/welcome'); // Redirect to Welcome page
   }
 
   function handlePass(event) {
