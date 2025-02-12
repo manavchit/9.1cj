@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage("Install") {
             steps {
-                git url : "https://github.com/moksh07b/Jenkins-pipeline.git", branch : "main"
+                git url : "https://github.com/manavchit/9.1cj.git", branch : "main"
                 bat "npm install --verbose -omit=optional"
             }
         }
