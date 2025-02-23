@@ -43,7 +43,7 @@ function Login() {
         <Input
           name="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="Enter your email please"
           onChange={handlePass}
         />
 
