@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
     
@@ -9,36 +8,36 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'npm install' // Install Dependency
-                sh 'npm run build' // Build the React app
+                bat 'npm install' // Install dependencies
+                bat 'npm run build' // Build the React app
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test -- --passWithNoTests' // Run automated tests
+                bat 'npm test -- --passWithNoTests' // Run automated tests
             }
         }
 
         stage('Code Quality Analysis') {
             steps {
-                sh 'npx eslint src' // Run code quality analysis with ESLint
+                bat 'npx eslint src' // Run code quality analysis with ESLint
             }
         }
 
         stage('Deploy to Test Environment') {
             steps {
-                sh 'docker build -t my-react-app .' // Build Docker image
-                sh 'docker stop my-react-container || true' // Stop existing container (if running)
-                sh 'docker rm my-react-container || true' // Remove existing container (if exists)
-                sh 'docker run -d --name my-react-container -p 3000:3000 my-react-app' // Run Docker container
+                bat 'docker build -t my-react-app .' // Build Docker image
+                bat 'docker stop my-react-container || exit 0' // Stop existing container (if running)
+                bat 'docker rm my-react-container || exit 0' // Remove existing container (if exists)
+                bat 'docker run -d --name my-react-container -p 3000:3000 my-react-app' // Run Docker container
             }
         }
         
         stage('Release to Netlify') {
             steps {
                 script {
-                    sh "sudo netlify deploy --dir=./build --prod --site=${env.NETLIFY_SITE_ID}"
+                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" -c "netlify deploy --dir=./build --prod --site=${env.NETLIFY_SITE_ID}"'
                 }
             }
         }
