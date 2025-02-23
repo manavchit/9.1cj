@@ -51,7 +51,7 @@ pipeline {
                        attachLog: true
          }
           failure {
-             emailtext subject: "Pipeline '${currentBuild.fullDisplayName}' Failed",
+             emailext subject: "Pipeline '${currentBuild.fullDisplayName}' Failed",
                        body: 'The build has failed. please investigate',
                        to: 'manav771177@gmail.com',
                        attachLog: true
