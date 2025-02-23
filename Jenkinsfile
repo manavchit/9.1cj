@@ -2,60 +2,60 @@
 pipeline {
     agent any
     
-    tools {
-        nodejs 'nodejs'
+    environment {
+        NETLIFY_SITE_ID = '8ed69f4e-a423-4bb6-b83f-e25890c100d5'
     }
     
     stages {
-        stage("Setup Dependencies") {
+        stage('Build') {
             steps {
-                git branch: "main", url: "https://github.com/manavchit/9.1cj.git"
-                bat "npm install --verbose --omit=optional"
+                sh 'npm install' // Install Dependency
+                sh 'npm run build' // Build the React app
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test -- --passWithNoTests' // Run automated tests
+            }
+        }
+
+        stage('Code Quality Analysis') {
+            steps {
+                sh 'npx eslint src' // Run code quality analysis with ESLint
+            }
+        }
+
+        stage('Deploy to Test Environment') {
+            steps {
+                sh 'docker build -t my-react-app .' // Build Docker image
+                sh 'docker stop my-react-container || true' // Stop existing container (if running)
+                sh 'docker rm my-react-container || true' // Remove existing container (if exists)
+                sh 'docker run -d --name my-react-container -p 3000:3000 my-react-app' // Run Docker container
             }
         }
         
-        stage("Build Project") {
+        stage('Release to Netlify') {
             steps {
-                bat "npm run build"
-            }
-        }
-        
-        stage("Run Tests") {
-            steps {
-                bat "npm test -- --passWithNoTests"
-            }
-        }
-        
-        stage("Static Code Analysis") {
-            steps {
-                bat "npx eslint src"
-            }
-        }
-          stage("Deploy"){
-            steps{
-                script{
-                    def netlifySiteID = '8ed69f4e-a423-4bb6-b83f-e25890c100d5'
-                    def netlifyAccessToken = 'nfp_fYaKF29EEguLXaxCXp6BG5Y7UwLLNLDw7224'
-                    
-                    bat "npm install netlify-cli --save-dev"
-                    bat "npx netlify deploy --site ${netlifySiteID} --auth ${netlifyAccessToken} --dir ./build --prod"
+                script {
+                    sh "sudo netlify deploy --dir=./build --prod --site=${env.NETLIFY_SITE_ID}"
                 }
             }
         }
     }
-     post {
-         success {
-             emailtext subject: "Pipeline '${currentBuild.fullDisplayName}' Successful",
-                       body: 'The build was successful. Congratulations!',
-                       to: 'manav771177@gmail.com',
-                       attachLog: true
-         }
-          failure {
-             emailtext subject: "Pipeline '${currentBuild.fullDisplayName}' Failed",
-                       body: 'The build has failed. please investigate',
-                       to: 'manav771177@gmail.com',
-                       attachLog: true
-         }
-     }
-             
+    
+    post {
+        success {
+            emailext subject: "Pipeline '${currentBuild.fullDisplayName}' Successful",
+                      body: 'The build was successful. Congratulations!',
+                      to: 'manav771177@gmail.com',
+                      attachLog: true
+        }
+        failure {
+            emailext subject: "Pipeline '${currentBuild.fullDisplayName}' Failed",
+                      body: 'The build has failed. Please investigate.',
+                      to: 'manav771177@gmail.com',
+                      attachLog: true
+        }
+    }
 }
